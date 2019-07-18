@@ -8,15 +8,24 @@ async function insertAd(ad) {
   return insertedId;
 }
 
-async function updateAd(ad, id) {
+async function updateAd(id, ad) {
   const database = await getDatabase();
-  const {updatedId} = await database.collection(collectionName).updateOne(ad, id);
-  return updatedId;
+  delete ad._id;
+  await database.collection(collectionName).update(
+    { _id: new ObjectID(id), },
+    {
+      $set: {
+        ...ad,
+      },
+    },
+  );
 }
 
-async function deleteAd(ad, id) {
+async function deleteAd(id) {
   const database = await getDatabase();
-  const {deletedId} = await database.collection(collectionName).deleteOne(ad, id);
+  const {deletedId} = await database.collection(collectionName).deleteOne({
+    _id: new ObjectID(id),
+  });
   return deletedId;
 }
 
@@ -27,6 +36,7 @@ async function getAds() {
 
 module.exports = {
   deleteAd,
+  updateAd,
   insertAd,
   getAds,
 };
