@@ -1,4 +1,5 @@
 const {getDatabase} = require('./mongo');
+const {ObjectID} = require('mongodb');
 
 const collectionName = 'ads';
 
