@@ -6,15 +6,10 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const {startDatabase} = require('./database/mongo');
-const {insertAd, getAds} = require('./database/ads');
+const {deleteAd, insertAd, getAds} = require('./database/ads');
 
 const app = express();
 const port = process.env.PORT || "8000";
-
-// temp db
-const ads = [
-    {title: 'Hello, world (again)!'}
-  ];
 
 //   configure app
 app.use(bodyParser.json());
@@ -23,8 +18,21 @@ app.use(helmet());
 app.use(morgan('combined'));
 
 
+// Default route gets all ad data for api results
 app.get('/', async (req, res) => {
     res.send(await getAds());
+});
+
+app.post('/', async (req, res) => {
+    res.send(await insertAd());
+});
+
+app.put('/:id', async (req, res) => {
+    res.send(await updateAd());
+});
+
+app.delete('/:id', async (req, res) => {
+    res.send(await deleteAd());
 });
 
 //   start in memory db
